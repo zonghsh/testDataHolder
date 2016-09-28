@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.rci</groupId>
+	<artifactId>testdataholder</artifactId>
+	<packaging>jar</packaging>
+	<version>1.9-SNAPSHOT</version>
+	<name>testdataholder</name>
+
+	<properties>
+		<reusablecomponent.dependency.release.url>http://192.168.81.254:8080/archiva/repository/internal/</reusablecomponent.dependency.release.url>
+		<reusablecomponent.dependency.snapshots.url>http://192.168.81.254:8080/archiva/repository/snapshots/</reusablecomponent.dependency.snapshots.url>
+		<reusablecomponent.internal.release.url>http://192.168.81.150/archiva/repository/internal/</reusablecomponent.internal.release.url>
+		<reusablecomponent.internal.snapshots.url>http://192.168.81.150/archiva/repository/snapshots/</reusablecomponent.internal.snapshots.url>
+		<reusablecomponent.svn.url>https://projectconnect.ncs.com.sg/svn/reusablecomponent</reusablecomponent.svn.url>
+		<reusablecomponent.ownername>huangjian</reusablecomponent.ownername>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<Implementation-Vendor>NCS Pte. Ltd.</Implementation-Vendor>
+	</properties>
+	<build>	
+        <extensions> 
+      <!-- WebDAV protocol support -->  
+       <extension> 
+          <groupId>org.apache.maven.wagon</groupId>  
+          <artifactId>wagon-webdav-jackrabbit</artifactId>  
+          <version>1.0</version> 
+      </extension> 
+      </extensions>  	
+		<!-- Ensure build using JDK above 1.6 -->
+		<plugins>
+			<!-- ======================================== -->
+			<!-- Configure Compilation Plugin -->
+			<!-- ======================================== -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+					<encoding>${project.build.sourceEncoding}</encoding>
+					<excludes>
+						<exclude>**/test/*.java</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+			<!-- ======================================== -->
+			<!-- Configure Release Plugin -->
+			<!-- ======================================== -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<preparationGoals>-Dmaven.test.skip=true clean install</preparationGoals>
+					<tagBase>${reusablecomponent.svn.url}/${reusablecomponent.ownername}/${project.artifactId}/tags</tagBase>
+				</configuration>
+			</plugin>
+			<!-- ======================================== -->
+			<!-- Configure JAR Plugin -->
+			<!-- ======================================== -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<classpathPrefix>lib/</classpathPrefix>
+							<addClasspath>true</addClasspath>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+			<!-- ======================================== -->
+			<!-- Configure Resource Plugin -->
+			<!-- ======================================== -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<encoding>${project.build.sourceEncoding}</encoding>
+				</configuration>
+			</plugin>			
+			<!-- ======================================== -->
+			<!-- Configure Deploy Plugin -->
+			<!-- ======================================== -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<version>2.4</version>
+			</plugin>
+			
+			
+			
+			<!-- ======================================== -->
+			<!-- Test coverage plugin -->
+			<!-- ======================================== -->
+			<!--  
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>cobertura-maven-plugin</artifactId>
+				<version>2.6</version>
+				<configuration>					
+					<instrumentation>						
+						<ignores>
+							<ignore>org.apache.log4j.*</ignore>
+							<ignore>org.springframework.*</ignore>
+							<ignore>org.apache.poi.*</ignore>
+						</ignores>
+						<excludes>
+							
+							<exclude>**/*Test.class</exclude>
+						</excludes>
+					</instrumentation>
+					<check>
+						<branchRate>85</branchRate>
+						<lineRate>85</lineRate>
+						<haltOnFailure>true</haltOnFailure>
+						<totalBranchRate>85</totalBranchRate>
+						<totalLineRate>85</totalLineRate>
+						<packageLineRate>85</packageLineRate>
+						<packageBranchRate>85</packageBranchRate>
+						<regexes>
+							<regex>
+								<pattern>com.example.simple.*</pattern>
+								<branchRate>90</branchRate>
+								<lineRate>80</lineRate>
+							</regex>
+							<regex>
+								<pattern>org.rci.*</pattern>
+								<branchRate>85</branchRate>
+								<lineRate>85</lineRate>
+							</regex>
+						</regexes>
+					</check>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>clean</goal>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			-->
+		</plugins>
+	</build>
+	<scm>
+		<connection>scm:svn:${reusablecomponent.svn.url}/${reusablecomponent.ownername}/${project.artifactId}/trunk/</connection>
+		<developerConnection>scm:svn:${reusablecomponent.svn.url}/${reusablecomponent.ownername}/${project.artifactId}/trunk/</developerConnection>
+	</scm>
+
+	<dependencies>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.17</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>3.9</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>3.9</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>org.springframework.orm</artifactId>
+			<version>3.2.5.RELEASE</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>org.springframework.jdbc</artifactId>
+			<version>3.2.5.RELEASE</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.4</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+			<version>6.8.8</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>org.springframework.test</artifactId>
+			<version>3.2.5.RELEASE</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.oracle</groupId>
+			<artifactId>ojdbc14</artifactId>
+			<version>10.2.0.2.0</version>
+			<scope>test</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.14</version>
+			<scope>test</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.microsoft.sqlserver</groupId>
+			<artifactId>sqljdbc4</artifactId>
+			<version>3.0</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+	
+	<!-- <reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>cobertura-maven-plugin</artifactId>
+				<version>2.6</version>
+			</plugin>
+		</plugins>
+	</reporting> -->
+	
+	<repositories>
+		<repository>
+			<id>reusablecomponent.internal.release</id>
+			<name>Reusable Component Internal Release Repository</name>
+			<url>${reusablecomponent.internal.release.url}</url>
+		</repository>
+		<repository>
+			<id>reusablecomponent.dependency.release</id>
+			<name>Reusablecomponent Dependency Release Repository</name>
+			<url>${reusablecomponent.dependency.release.url}</url>
+		</repository>
+	</repositories>
+	<distributionManagement>
+		<repository>
+			<id>reusablecomponent.internal.release</id>
+			<name>Reusablecomponent Internal Release Repository</name>
+			<url>dav:${reusablecomponent.internal.release.url}</url>
+		</repository>
+		<snapshotRepository>
+			<id>reusablecomponent.internal.snapshots</id>
+			<name>Reusablecomponent Internal Snapshot Repository</name>
+			<url>dav:${reusablecomponent.internal.snapshots.url}</url>
+		</snapshotRepository>
+	</distributionManagement>
+</project>

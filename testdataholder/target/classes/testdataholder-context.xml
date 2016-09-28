@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+	<bean id="propertyConfigurer"  
+        class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">  
+        <property name="locations">  
+            <list>  
+                <value>  
+                    testdataholder.properties   
+                </value>  
+            </list>  
+        </property>
+    </bean>
+	  
+	<bean id="genSchemaDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="${gen.jdbc.drive.class.name}"/>
+        <property name="url" value="${gen.jdbc.url}"/>
+		<property name="username" value="${gen.jdbc.username}" />
+		<property name="password" value="${gen.jdbc.password}" />
+    </bean>
+	
+	<bean id="schemaGenerator" class="org.rci.testdataholder.generator.SchemaGenerator" init-method="init">
+		<property name="generatedFilePath" value="${testdata.file.path}" />
+		<property name="dbType" value="${database.type}"/>
+		<property name="dataSource" ref="genSchemaDataSource"/><!-- use the data source which can access the system table -->
+		<property name="includeTablePrefix" value="${include.table.prefix}"/>
+		<property name="excludeTables" value="${exclude.tables}" />
+		<property name="auditTblPrefix" value="${include.table.audit.prefix}"/>
+		<property name="auditTblSuffix" value="${include.table.audit.suffix}"/>
+	</bean>
+	
+	<bean id="dataLoader" class="org.rci.testdataholder.loader.DataLoader" init-method="init">
+		<property name="generatedFilePath" value="${testdata.file.path}" />
+		<property name="dbType" value="${database.type}"/>
+		<property name="dataSource" ref="dataSource"/><!-- use the data source which can access the business table -->
+		<!-- <property name="loadAllData" value="${testdata.load.all}" /> -->
+		<property name="preloadDataFile" value="${testdata.db.preload.data.file}"/>		
+		<property name="specialProcessFile" value="${testdata.db.special.process.file}" />
+		<property name="auditTblPrefix" value="${include.table.audit.prefix}"/>
+		<property name="auditTblSuffix" value="${include.table.audit.suffix}"/>
+	</bean>
+	
+	<bean id="dataSourceInitializer" class="org.rci.testdataholder.util.DataSourceInitializer" init-method="init">
+		<property name="dataSource" ref="genSchemaDataSource"/>
+		<property name="scriptsPath" value="${testdata.db.script.path}" />
+		<property name="scriptsFiles" value="${testdata.db.script.files}" />
+		<property name="initialized" value="${testdata.db.initialed}"/>
+	</bean>
+	
+</beans>
