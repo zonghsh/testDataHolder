@@ -1,0 +1,23 @@
+<project xmlns="http://maven.apache.org/DECORATION/1.3.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/DECORATION/1.3.0 http://maven.apache.org/xsd/decoration-1.3.0.xsd"
+    name="testdataholder Component">
+	<bannerLeft>
+		<name>NCS Reusable Component</name>
+		<src>images/apache-ncs-project.png</src>
+		<href>http://codeconnect.ncs.com.sg</href>
+	</bannerLeft>
+	<bannerRight>
+		<name>NCS Site</name>
+		<src>images/ncs-logo.png</src>
+		<href>https://inet.ncs.com.sg</href>
+	</bannerRight>
+	<skin>
+		<groupId>org.apache.maven.skins</groupId>
+		<artifactId>maven-ncs-skin</artifactId>
+		<version>1.0</version>
+	</skin>
+	<body>
+		 <menu ref="reports" />
+	</body>
+</project>
